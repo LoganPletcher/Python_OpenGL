@@ -1,24 +1,36 @@
 import pygame
 from pygame import *
+import sys
+from sys import *
+import Nodes
+from Nodes import *
+import collections
+from collections import *
 
 pygame.init()
 pygame.font.init()
+screen = pygame.display.set_mode((255,255))
+red = (255,0,0)
+green = (0,255,0)
+blue = (0,0,255)
+darkBlue = (0,0,128)
+white = (255,255,255)
+black = (0,0,0)
+pink = (255,200,200)
+screen.fill(green)
+nodes = Counter()
+for i in range(0,10):
+    for j in range(0,10):
+        node = Nodes.Node(i,j)
+        nodes[node] = (i * 10) + j
 
-background = [1, 1, 2, 2, 2, 1]
-playerpos = 3
-leftmove = 0
+for node in nodes:
+    node.draw(screen,green)
 
-size = width, height = 1600, 900
-speed = [500, 500]
-black = 0, 0, 0
-red = 255, 0, 0
-
-surfa = pygame.Surface((10, 10), 0, 0, (1, 1, 1, 1))
-
-screen = pygame.display.set_mode(size)
-pygame.draw.rect(surfa,red,(1,1,10,10))
-
-
-while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
+while True:
+        for event in pygame.event.get():
+            if event.type==QUIT:
+                pygame.quit()
+                sys.exit()
+        #pygame.draw.rect(screen,(255,0,0),(0,0,30,30))
+        pygame.display.update()
