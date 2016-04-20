@@ -27,7 +27,7 @@ def MinNumFinder(*argv):
     print (minnum)
     return (minnum)
 
-
+'''
 testnum1 = [45]
 testnum2 = "butt"
 testnum3 = 11
@@ -36,3 +36,4 @@ testnum5 = [21321]
 testnums1 = [42, 455, 1, 4333, 43434, 111]
 
 MinNumFinder(testnums1, testnum2, testnum3, testnum4, testnum5, testnum1)
+'''
