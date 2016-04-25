@@ -10,7 +10,15 @@ from time import sleep
 import lowestnum
 from lowestnum import *
 
-def pythagorean(node, onode):
+def pythag(node, cnode):
+    A = onode.pos[0] - node.pos[0]
+    B = onode.pos[1] - node.pos[1]
+    Asqr = A * A
+    Bsqr = B * B
+    Csqr = Asqr + Bsqr
+    return (sqrt(Csqr)*10)
+
+def manhattan(node, onode):
     A = onode.pos[0] - node.pos[0]
     B = onode.pos[1] - node.pos[1]
     if A < 0: A = -A
@@ -20,82 +28,16 @@ def pythagorean(node, onode):
 
 
 def neighbors(cnode, nodes, openList, onode, closedList):
-    for noderow in nodes:
-        for node in noderow:
-            if node.walkable == True:
-                    if node not in openList:
-                        if node not in closedList:
-                            if cnode not in closedList:
-                                closedList.append(cnode)
-                                openList.remove(cnode)
-                            if node.pos[0] == cnode.pos[0]-1:
-                                if node.pos[1] == cnode.pos[1]-1:
-                                    node.setG(14+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-                                elif node.pos[1] == cnode.pos[1]:
-                                    node.setG(10+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-                                elif node.pos[1] == cnode.pos[1]+1:
-                                    node.setG(14+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-                            elif node.pos[0] == cnode.pos[0]:
-                                if node.pos[1] == cnode.pos[1]-1:
-                                    node.setG(10+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                 node.parent = node2
-                                    openList.append(node)
-                                elif node.pos[1] == cnode.pos[1]+1:
-                                    node.setG(10+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-                            elif node.pos[0] == cnode.pos[0]+1:
-                                if node.pos[1] == cnode.pos[1]-1:
-                                    node.setG(14+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-                                elif node.pos[1] == cnode.pos[1]:
-                                    node.setG(10+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-                                elif node.pos[1] == cnode.pos[1]+1:
-                                    node.setG(14+cnode.g)
-                                    node.setH(int(pythagorean(node, onode) * 10))
-                                    for noderow2 in nodes:
-                                        for node2 in noderow:
-                                            if node2 == cnode:
-                                                node.parent = node2
-                                    openList.append(node)
-
+    Adj = []
+    for y, noderow in enumerate(nodes):
+        for x, node in enumerate(noderow):
+            if node == cnode:
+                curry = (y, x)
+    for y, noderow in enumerate(nodes):
+        for x, node in enumerate(noderow):
+            if (nodes[y][x].walkable == True) and ((curry[0]-1 <= y <= curry[0]+1) and (curry[1]-1 <= x <= curry[1]+1)):
+                Adj.append(nodes[y][x])
+    return Adj
 
 pygame.init()
 pygame.font.init()
@@ -135,7 +77,7 @@ for noderow in nodes:
     for node in noderow:
         if node == cnode:
             node.setG(0)
-            node.setH(int(pythagorean(node, onode) * 10))
+            node.setH(int(manhattan(node, onode) * 10))
             openList.append(node)
         else:
             continue
@@ -151,7 +93,30 @@ while True:
                 node.draw(screen,green)
         #
         #if not openList:
-        neighbors(cnode, nodes, openList, onode, closedList)
+        if not cnode == onode:
+            for noderow in nodes:
+                for node in noderow:
+                    if node == cnode:
+                        closedList.append(cnode)
+                        openList.remove(node)
+        if not cnode == onode:
+            Adj = neighbors(cnode, nodes, openList, onode, closedList)
+        for node in Adj:
+            if node not in closedList:
+                if node not in openList:
+                    if onode in openList:
+                        print("Got em")
+                    else:
+                        node.parent = cnode
+                        node.setG(int(pythag(node, cnode)))
+                        node.setH(manhattan(node, onode))
+                        openList.append(node)
+                else:
+                    cost = cnode.g + int(pythag(node, cnode))
+                    if (cost < node.g):
+                        node.parent = cnode
+                        node.setG(cost)
+        
         for node in openList:
                 pygame.draw.rect(screen, darkBlue,
                                  (node.left, node.top, node.width, node.height))
@@ -164,25 +129,26 @@ while True:
                          (agentnode.left, agentnode.top, agentnode.width, agentnode.height))
         pygame.draw.rect(screen, cyan,
                          (cnode.left, cnode.top, cnode.width, cnode.height))
-        '''if cnode == onode:
+        if cnode == onode:
             for noderow in nodes:
                 for node in noderow:
-                    if node == cnode:
+                    if node.parent:
                         pygame.draw.line(screen, hotpink,
-                                             (node.left+10, node.top+10), (node.parent.left+10, node.parent.top+10), 1)
-                        pygame.draw.line(screen, hotpink,
-                                             (node.parent.left+10, node.parent.top+10), (node.parent.parent.left+10, node.parent.parent.top+10), 1)'''
+                                         (node.left+10, node.top+10), (node.parent.left+10, node.parent.top+10), 1)
+        
         
         if not cnode == onode:
+            Fs = []
             for node in openList:
-                Fs = []
-                for node2 in openList:
-                    Fs.append(node2.getF())
+                Fs.append(node.getF())
                 if node.getF() == lowestnum.MinNumFinder(Fs):
-                    print (node.getF())
+                    #print (node.getF())
+                    #closedList.append(cnode)
+                    #openList.remove(cnode)
                     cnode = node
-                    #closedList.append(node)
+                    #closedList.append(cnode)
                     #openList.remove(node)
+                    
         
         sleep(1)
         pygame.display.update()
