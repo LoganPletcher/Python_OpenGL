@@ -11,9 +11,9 @@ class Node:
 		self.top = (self.margin + self.height) *  y + self.margin
 		self.walkable = True
 		self.pos = (x, self.height - y)
-		self.f = None
-		self.g = None
-		self.h = None
+		self.f = 0
+		self.g = 0
+		self.h = 0
 
 	def draw(self, screen, color):
 		margin = self.margin
@@ -22,10 +22,14 @@ class Node:
 		
 	def setWalk(self, walkable):
 		self.walkable = walkable
-		 
+	
 	def getF(self):
-		return self.h + self.g
+		return self.f
 	def setH(self, val):
 		self.h = val
+		self.f = self.g + self.h
 	def setG(self, val):
 		self.g = val
+		self.f = self.g + self.h
+	def info(self):
+		print(self.pos)

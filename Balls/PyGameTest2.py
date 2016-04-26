@@ -1,6 +1,5 @@
 import pygame
 from pygame import *
-from pygame.locals import *
 import sys
 from sys import *
 import Nodes
@@ -24,7 +23,7 @@ def manhattan(node, onode):
     B = onode.pos[1] - node.pos[1]
     if A < 0: A = -A
     if B < 0: B = -B
-    ManDist = (A*10) + (B*10)
+    ManDist = (A) + (B)
     return ManDist
 
 
@@ -42,8 +41,10 @@ def neighbors(cnode, nodes, openList, onode, closedList):
 
 pygame.init()
 #pygame.font.init()
-screen = pygame.display.set_mode((1605,905))
+screen = pygame.display.set_mode((280,280))
 keys = pygame.key.get_pressed()
+
+# Defined colors that are used in the drawing of objects by being in an RGB format
 red = (255,0,0)
 green = (0,255,0)
 blue = (0,0,255)
@@ -61,89 +62,102 @@ screen.fill(green)
 
 nodes = []
 
-for y in range(0,64):
+for y in range(0,11):
     noderow = []
-    for x in range(0,36):
+    for x in range(0,11):
         node = Nodes.Node(y,x)
         noderow.append(node)
     nodes.append(noderow)
 
-anode = nodes[63][35]
+anode = nodes[10][10]
 cnode = anode
 onode = nodes[5][2]
 
-for i in range(0,3):
-    if not i == 1:
-        nodes[4][i+1].setWalk(False)
-for i in range(0,3):
-    nodes[6][i+1].setWalk(False)
-nodes[5][3].setWalk(False)
-nodes[5][1].setWalk(False)
+#Ignore, this is hard coding unwalkable nodes #
+for i in range(0,3):                          #
+    if not i == 1:                            #
+        nodes[4][i+1].setWalk(False)          #
+for i in range(0,3):                          #
+    nodes[6][i+1].setWalk(False)              #
+nodes[5][1].setWalk(False)                    #
+nodes[5][3].setWalk(False)                    #
+###############################################
 
 openList = [] #Nodes that the current node can and could walk to
 closedList = [] #Nodes that the current node has already walked to
 
+#Setting the h values of the nodes
 for noderow in nodes:
     for node in noderow:
-        if node == cnode:
-            node.setG(0)
-            node.setH(int(manhattan(node, onode) * 10))
-            openList.append(node)
-        else:
-            continue
+        node.setH(int(manhattan(node, onode) * 10))
         
 neighbors(cnode, nodes, openList, onode, closedList)
 
 gamerunning = True
 
+for noderow in nodes:
+        for node in noderow:
+            node.draw(screen,green)
+start = nodes[10][10]
+openList.append(start)
+cnode = start
+cnode.setG(0)
+closedList.append(start)
+cnode.info()
+loopnum = 0
 while True:
-    if keys[K_a]:
-        if gamerunning:
-            gamerunning = False
-        else:
-            gamerunning = True
-    
+    if onode is cnode:
+        break
+    '''if gamerunning:
+        if not cnode == onode:
+            Fs = []
+            for node in openList:
+                Fs.append(node.getF())
+                if node.getF() == lowestnum.MinNumFinder(Fs):
+                    cnode = node'''
+    print("loopnum:", loopnum)
+    openList.sort(key = lambda x : x.f)
+    for i in openList:
+        print i.f
+    cnode = openList[0]
+    closedList.append(cnode)
+    openList.remove(cnode)
+
     for event in pygame.event.get():
         if event.type==QUIT:
             pygame.quit()
             sys.exit()
-        '''if event.type==KEYDOWN:
-            if '''
-                
-    for noderow in nodes:
-        for node in noderow:
-            node.draw(screen,green)
+        if event.type==KEYDOWN:
+            if event.key==K_RETURN:
+                if gamerunning:
+                    gamerunning = False
+                else:
+                    gamerunning = True
 
-    if gamerunning:
+    '''if gamerunning:
         if not cnode == onode:
             for noderow in nodes:
                 for node in noderow:
                     if node == cnode:
                         closedList.append(cnode)
-                        openList.remove(node)
+                        openList.remove(node)'''
 
-    if gamerunning:
-        if not cnode == onode:
-            Adj = neighbors(cnode, nodes, openList, onode, closedList)
+    if gamerunning:        
+        Adj = neighbors(cnode, nodes, openList, onode, closedList)
 
-    if gamerunning:
-        if not cnode == onode:
-            for node in Adj:
-                if node not in closedList:
-                    if node not in openList:
-                        if onode in openList:
-                            print("Got em")
-                        else:
-                            node.parent = cnode
-                            node.setG(int(pythag(node, cnode)))
-                            node.setH(manhattan(node, onode))
-                            openList.append(node)
-                    else:
-                        cost = cnode.g + int(pythag(node, cnode))
-                        if (cost < node.g):
-                            node.parent = cnode
-                            node.setG(cost)
-        
+    if gamerunning:       
+        for node in Adj:            
+            if node not in openList and node not in closedList:                   
+                node.parent = cnode
+                node.setG((int(pythag(node, cnode))))#+ node.parent.g)
+                #node.setH(manhattan(node, onode))
+                openList.append(node)
+            else:
+                cost = cnode.g + int(pythag(node, cnode))
+                if (cost < node.g):
+                    node.parent = cnode
+                    node.setG(cost)
+    
     for node in openList:
         pygame.draw.rect(screen, darkBlue,
                          (node.left, node.top, node.width, node.height))
@@ -169,17 +183,10 @@ while True:
                     while currentnode.parent:
                         pygame.draw.line(screen, hotpink,
                                          (currentnode.left+10, currentnode.top+10), (currentnode.parent.left+10, currentnode.parent.top+10), 2)
+                        
                         currentnode = currentnode.parent
                     gamerunning = False
 
-    if gamerunning:
-        if not cnode == onode:
-            Fs = []
-            for node in openList:
-                Fs.append(node.getF())
-                if node.getF() == lowestnum.MinNumFinder(Fs):
-                    cnode = node
-
-        '''if gamerunning:
-            sleep(1)'''
+    sleep(1)
     pygame.display.update()
+    loopnum += 1
