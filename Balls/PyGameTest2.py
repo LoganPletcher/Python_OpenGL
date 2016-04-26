@@ -1,5 +1,6 @@
 import pygame
 from pygame import *
+from pygame.locals import *
 import sys
 from sys import *
 import Nodes
@@ -40,8 +41,9 @@ def neighbors(cnode, nodes, openList, onode, closedList):
     return Adj
 
 pygame.init()
-pygame.font.init()
+#pygame.font.init()
 screen = pygame.display.set_mode((1605,905))
+keys = pygame.key.get_pressed()
 red = (255,0,0)
 green = (0,255,0)
 blue = (0,0,255)
@@ -59,22 +61,24 @@ screen.fill(green)
 
 nodes = []
 
-for y in range(0,66):
+for y in range(0,64):
     noderow = []
     for x in range(0,36):
         node = Nodes.Node(y,x)
         noderow.append(node)
     nodes.append(noderow)
 
-anode = nodes[2][2]
-cnode = nodes[2][2]
-onode = nodes[6][2]
+anode = nodes[63][35]
+cnode = anode
+onode = nodes[5][2]
 
 for i in range(0,3):
-    nodes[4][i+1].setWalk(False)
+    if not i == 1:
+        nodes[4][i+1].setWalk(False)
+for i in range(0,3):
+    nodes[6][i+1].setWalk(False)
 nodes[5][3].setWalk(False)
-nodes[6][3].setWalk(False)
-nodes[7][3].setWalk(False)
+nodes[5][1].setWalk(False)
 
 openList = [] #Nodes that the current node can and could walk to
 closedList = [] #Nodes that the current node has already walked to
@@ -90,25 +94,39 @@ for noderow in nodes:
         
 neighbors(cnode, nodes, openList, onode, closedList)
 
+gamerunning = True
+
 while True:
-        for event in pygame.event.get():
-            if event.type==QUIT:
-                pygame.quit()
-                sys.exit()
+    if keys[K_a]:
+        if gamerunning:
+            gamerunning = False
+        else:
+            gamerunning = True
+    
+    for event in pygame.event.get():
+        if event.type==QUIT:
+            pygame.quit()
+            sys.exit()
+        '''if event.type==KEYDOWN:
+            if '''
                 
-        for noderow in nodes:
-            for node in noderow:
-                node.draw(screen,green)
-        
+    for noderow in nodes:
+        for node in noderow:
+            node.draw(screen,green)
+
+    if gamerunning:
         if not cnode == onode:
             for noderow in nodes:
                 for node in noderow:
                     if node == cnode:
                         closedList.append(cnode)
                         openList.remove(node)
-                        
+
+    if gamerunning:
         if not cnode == onode:
             Adj = neighbors(cnode, nodes, openList, onode, closedList)
+
+    if gamerunning:
         if not cnode == onode:
             for node in Adj:
                 if node not in closedList:
@@ -126,39 +144,42 @@ while True:
                             node.parent = cnode
                             node.setG(cost)
         
-        for node in openList:
-                pygame.draw.rect(screen, darkBlue,
-                                 (node.left, node.top, node.width, node.height))
-        for node in closedList:
-            pygame.draw.rect(screen, lightBlue,
-                             (node.left, node.top, node.width, node.height))
+    for node in openList:
+        pygame.draw.rect(screen, darkBlue,
+                         (node.left, node.top, node.width, node.height))
+    for node in closedList:
+        pygame.draw.rect(screen, lightBlue,
+                         (node.left, node.top, node.width, node.height))
             
-        pygame.draw.rect(screen, purple,
+    pygame.draw.rect(screen, purple,
                          (onode.left, onode.top, onode.width, onode.height))
         
-        pygame.draw.rect(screen, yellow,
+    pygame.draw.rect(screen, yellow,
                          (anode.left, anode.top, anode.width, anode.height))
         
-        if not cnode == onode:
-            pygame.draw.rect(screen, cyan,
-                             (cnode.left, cnode.top, cnode.width, cnode.height))
+    if not cnode == onode:
+        pygame.draw.rect(screen, cyan,
+                         (cnode.left, cnode.top, cnode.width, cnode.height))
             
-        if cnode == onode:
-            for noderow in nodes:
-                for node in noderow:
-                    if node == cnode:
-                        currentnode = node
-                        while currentnode.parent:
-                            pygame.draw.line(screen, hotpink,
-                                             (currentnode.left+10, currentnode.top+10), (currentnode.parent.left+10, currentnode.parent.top+10), 2)
-                            currentnode = currentnode.parent
-        
+    if cnode == onode:
+        for noderow in nodes:
+            for node in noderow:
+                if node == cnode:
+                    currentnode = node
+                    while currentnode.parent:
+                        pygame.draw.line(screen, hotpink,
+                                         (currentnode.left+10, currentnode.top+10), (currentnode.parent.left+10, currentnode.parent.top+10), 2)
+                        currentnode = currentnode.parent
+                    gamerunning = False
+
+    if gamerunning:
         if not cnode == onode:
             Fs = []
             for node in openList:
                 Fs.append(node.getF())
                 if node.getF() == lowestnum.MinNumFinder(Fs):
                     cnode = node
-        
-        sleep(1)
-        pygame.display.update()
+
+        '''if gamerunning:
+            sleep(1)'''
+    pygame.display.update()
