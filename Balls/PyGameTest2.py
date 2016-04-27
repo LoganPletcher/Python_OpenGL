@@ -73,6 +73,7 @@ anode = nodes[10][10]
 cnode = anode
 onode = nodes[5][2]
 
+
 #Ignore, this is hard coding unwalkable nodes #
 for i in range(0,3):                          #
     if not i == 1:                            #
@@ -89,7 +90,7 @@ closedList = [] #Nodes that the current node has already walked to
 #Setting the h values of the nodes
 for noderow in nodes:
     for node in noderow:
-        node.setH(int(manhattan(node, onode) * 10))
+        node.setH(int(manhattan(node, onode)))
         
 neighbors(cnode, nodes, openList, onode, closedList)
 
@@ -98,23 +99,15 @@ gamerunning = True
 for noderow in nodes:
         for node in noderow:
             node.draw(screen,green)
-start = nodes[10][10]
-openList.append(start)
-cnode = start
+openList.append(anode)
 cnode.setG(0)
-closedList.append(start)
+closedList.append(anode)
 cnode.info()
 loopnum = 0
 while True:
     if onode is cnode:
         break
-    '''if gamerunning:
-        if not cnode == onode:
-            Fs = []
-            for node in openList:
-                Fs.append(node.getF())
-                if node.getF() == lowestnum.MinNumFinder(Fs):
-                    cnode = node'''
+
     print("loopnum:", loopnum)
     openList.sort(key = lambda x : x.f)
     for i in openList:
@@ -134,14 +127,6 @@ while True:
                 else:
                     gamerunning = True
 
-    '''if gamerunning:
-        if not cnode == onode:
-            for noderow in nodes:
-                for node in noderow:
-                    if node == cnode:
-                        closedList.append(cnode)
-                        openList.remove(node)'''
-
     if gamerunning:        
         Adj = neighbors(cnode, nodes, openList, onode, closedList)
 
@@ -149,8 +134,7 @@ while True:
         for node in Adj:            
             if node not in openList and node not in closedList:                   
                 node.parent = cnode
-                node.setG((int(pythag(node, cnode))))#+ node.parent.g)
-                #node.setH(manhattan(node, onode))
+                node.setG(int(pythag(node, cnode)))
                 openList.append(node)
             else:
                 cost = cnode.g + int(pythag(node, cnode))
