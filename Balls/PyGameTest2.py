@@ -9,6 +9,7 @@ from math import *
 from time import sleep
 import lowestnum
 from lowestnum import *
+from AStar import AstarAlg
 
 def pythag(node, cnode):
     A = onode.pos[0] - node.pos[0]
@@ -24,7 +25,7 @@ def manhattan(node, onode):
     if A < 0: A = -A
     if B < 0: B = -B
     ManDist = (A) + (B)
-    return ManDist
+    return (ManDist * 10)
 
 
 def neighbors(cnode, nodes, openList, onode, closedList):
@@ -44,7 +45,7 @@ pygame.init()
 screen = pygame.display.set_mode((280,280))
 keys = pygame.key.get_pressed()
 
-# Defined colors that are used in the drawing of objects by being in an RGB format
+'''Defined colors that are used in the drawing of objects by being in an RGB format'''
 red = (255,0,0)
 green = (0,255,0)
 blue = (0,0,255)
@@ -87,7 +88,7 @@ nodes[5][3].setWalk(False)                    #
 openList = [] #Nodes that the current node can and could walk to
 closedList = [] #Nodes that the current node has already walked to
 
-#Setting the h values of the nodes
+'''Setting the h values of the nodes'''
 for noderow in nodes:
     for node in noderow:
         node.setH(int(manhattan(node, onode)))
@@ -110,8 +111,8 @@ while True:
 
     print("loopnum:", loopnum)
     openList.sort(key = lambda x : x.f)
-    for i in openList:
-        print i.f
+    '''for i in openList:
+        print i.f'''
     cnode = openList[0]
     closedList.append(cnode)
     openList.remove(cnode)
@@ -171,6 +172,6 @@ while True:
                         currentnode = currentnode.parent
                     gamerunning = False
 
-    sleep(1)
+    #sleep(1)
     pygame.display.update()
     loopnum += 1
