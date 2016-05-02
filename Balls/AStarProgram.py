@@ -10,23 +10,23 @@ import random
 from random import *
 
 print("Enter the y value for the starting node. It should be a number under 31.")
-ay = input()
-if ay > 30 or ay < 0 or type(ay) is not int:
+ay = raw_input()
+if (ay > 30 or ay < 0) or type(ay) is not int:
     ay = randrange(0,31)
 print("\nEnter the x value for the starting node. It should be a number under 23.")
-ax = input()
-if ax > 22 or ax < 0 or type(ax) is not int:
+ax = raw_input()
+if (ax > 22 or ax < 0) or type(ax) is not int:
     ax = randrange(0,23)
 print("\nEnter the y value for the goal node. It should be a number under 31.")
-oy = input()
-if oy > 30 or oy < 0 or type(oy) is not int:
+oy = raw_input()
+if (oy > 30 or oy < 0) or type(oy) is not int:
     oy = randrange(0,31)
 print("\nEnter the x value for the goal node. It should be a number under 23.")
-ox = input()
-if ox > 22 or ox < 0 or type(ox) is not int:
+ox = raw_input()
+if (ox > 22 or ox < 0) or type(ox) is not int:
     ox = randrange(0,23)
 print("\nEnter the number of unwalkable nodes you want in the program.")
-UnwalkNodes = input()
+UnwalkNodes = raw_input()
 if UnwalkNodes < 0 or type(UnwalkNodes) is not int:
     UnwalkNodes = 0
 
@@ -57,17 +57,6 @@ screen.fill(grey)
 ASalg = AstarAlg((31,23),(ay,ax),(oy,ox))
 
 ASalg.UnwalkableGenerator(UnwalkNodes)
-'''
-# Hard coded unwalkable nodes ##############
-for i in range(0,3):                       #
-    if not i == 1:                         #
-        ASalg.nodes[4][i+1].setWalk(False) #
-for i in range(0,3):                       #
-    ASalg.nodes[6][i+1].setWalk(False)     #
-ASalg.nodes[5][1].setWalk(False)           #
-ASalg.nodes[5][3].setWalk(False)           #
-############################################
-'''
 
 ASalg.AlgorithmS()
 
