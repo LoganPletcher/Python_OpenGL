@@ -12,35 +12,35 @@ from random import *
 print("Enter the y value for the starting node. It should be a number under 31.")
 try:
     ay = int(raw_input())
-    if (ay > 30 or ay < 0)
+    if (ay > 30 or ay < 0):
         ay = randrange(0,31)
 except ValueError:
     ay = randrange(0,31)
 print("\nEnter the x value for the starting node. It should be a number under 23.")
 try:
     ax = int(raw_input())
-    if (ax > 22 or ay < 0)
+    if (ax > 22 or ay < 0):
         ax = randrange(0,23)
 except ValueError:
     ax = randrange(0,23)
 print("\nEnter the y value for the goal node. It should be a number under 31.")
 try:
     oy = int(raw_input())
-    if (oy > 30 or oy < 0)
+    if (oy > 30 or oy < 0):
         oy = randrange(0,31)
 except ValueError:
     oy = randrange(0,31)
 print("\nEnter the x value for the goal node. It should be a number under 23.")
 try:
     ox = int(raw_input())
-    if (ox > 22 or ay < 0)
+    if (ox > 22 or ay < 0):
         ox = randrange(0,23)
 except ValueError:
     ox = randrange(0,23)
 print("\nEnter the number of unwalkable nodes you want in the program.")
 try:
     UnwalkNodes = int(raw_input())
-    if (UnwalkNodes > 357 or UnwalkNodes < 0)
+    if (UnwalkNodes > 357 or UnwalkNodes < 0):
         UnwalkNodes = randrange(0,350)
 except ValueError:
     UnwalkNodes = randrange(0,350)
