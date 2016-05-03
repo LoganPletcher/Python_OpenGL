@@ -10,25 +10,40 @@ import random
 from random import *
 
 print("Enter the y value for the starting node. It should be a number under 31.")
-ay = raw_input()
-if (ay > 30 or ay < 0) or type(ay) is not int:
+try:
+    ay = int(raw_input())
+    if (ay > 30 or ay < 0)
+        ay = randrange(0,31)
+except ValueError:
     ay = randrange(0,31)
 print("\nEnter the x value for the starting node. It should be a number under 23.")
-ax = raw_input()
-if (ax > 22 or ax < 0) or type(ax) is not int:
+try:
+    ax = int(raw_input())
+    if (ax > 22 or ay < 0)
+        ax = randrange(0,23)
+except ValueError:
     ax = randrange(0,23)
 print("\nEnter the y value for the goal node. It should be a number under 31.")
-oy = raw_input()
-if (oy > 30 or oy < 0) or type(oy) is not int:
+try:
+    oy = int(raw_input())
+    if (oy > 30 or oy < 0)
+        oy = randrange(0,31)
+except ValueError:
     oy = randrange(0,31)
 print("\nEnter the x value for the goal node. It should be a number under 23.")
-ox = raw_input()
-if (ox > 22 or ox < 0) or type(ox) is not int:
+try:
+    ox = int(raw_input())
+    if (ox > 22 or ay < 0)
+        ox = randrange(0,23)
+except ValueError:
     ox = randrange(0,23)
 print("\nEnter the number of unwalkable nodes you want in the program.")
-UnwalkNodes = raw_input()
-if UnwalkNodes < 0 or type(UnwalkNodes) is not int:
-    UnwalkNodes = 0
+try:
+    UnwalkNodes = int(raw_input())
+    if (UnwalkNodes > 357 or UnwalkNodes < 0)
+        UnwalkNodes = randrange(0,350)
+except ValueError:
+    UnwalkNodes = randrange(0,350)
 
 pygame.init()
 pygame.font.init()
